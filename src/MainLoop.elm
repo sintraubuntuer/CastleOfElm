@@ -1,16 +1,25 @@
-module Main exposing (..)
+module Main exposing (Msg(..), fromCode, init, initialModel, main, matchToSide, movepc, pcState, subscriptions, update, view)
 
 --import Signal exposing (Signal, foldp, map, map2, merge)
 --import Graphics.Element exposing (Element, image)
+--import Element exposing (Element, image)
 
+import Browser
+import Browser.Events
+    exposing
+        ( onKeyDown
+        )
 import Collage exposing (..)
+import Collage.Render exposing (svg)
 import Debug exposing (log)
-import Element exposing (Element, image)
 import GameModel exposing (..)
 import Html exposing (Html)
-import Keyboard
+import Html.Events exposing (keyCode)
+import Json.Decode as Decode exposing (Value)
 
 
+
+--import Keyboard
 --import Window
 
 
@@ -85,11 +94,12 @@ movepc dir model =
                 Just tilet ->
                     if tilet == BackGround Floor then
                         pc
+
                     else
                         default
 
-        updatePc pc dir =
-            case dir of
+        updatePc pc dir_ =
+            case dir_ of
                 Up ->
                     { pc | y = pc.y + 1, dir = Up }
 
@@ -165,7 +175,7 @@ view model =
 
         -- Hardcoded
         pcImage =
-            image tileSide tileSide src
+            image ( tileSide, tileSide ) src
 
         ( tW, tH ) =
             matchToSide (log "win" frame) tileSide
@@ -179,19 +189,24 @@ view model =
         pcPos =
             ( model.pc.x * tileSide, tileSide * model.pc.y )
 
+        {- }
+           theelement =
+               collage tWSide
+                   tHSide
+                   (displayGrid ( tW, tH ) pcPos mainGrid
+                       ++ [ pcImage
+                               |> toForm
+                               |> Debug.log "pc"
+                               |> move pcPos
+                          ]
+                   )
+        -}
         theelement =
-            collage tWSide
-                tHSide
-                (displayGrid ( tW, tH ) pcPos mainGrid
-                    ++ [ pcImage
-                            |> toForm
-                            |> Debug.log "pc"
-                            |> move pcPos
-                       ]
-                )
+            group <|
+                displayGrid ( tW, tH ) pcPos mainGrid
     in
     theelement
-        |> Element.toHtml
+        |> svg
 
 
 
@@ -202,7 +217,8 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     --Keyboard.presses (\code ->  (Char.fromCode code))
     Sub.batch
-        [ Keyboard.downs (\kcode -> KeyPress (fromCode kcode))
+        [ --Keyboard.downs (\kcode -> KeyPress (fromCode kcode))
+          onKeyDown (Decode.map (\kCode -> KeyPress (fromCode kCode)) keyCode)
 
         --, Keyboard.ups (\kcode -> KeyUpMsg (fromCode kcode))
         --Keyboard.presses (\kcode -> KeyPress (fromCode kcode))
@@ -247,14 +263,18 @@ fromCode keyCode =
 --main = lift2 display Window.dimensions (foldp step mario input)
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    {}
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( initialModel, Cmd.none )
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Html.program
+    Browser.element
         { init = init
         , view = view
         , update = update

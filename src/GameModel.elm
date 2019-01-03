@@ -1,7 +1,47 @@
-module GameModel exposing (..)
+module GameModel exposing
+    ( Action(..)
+    , BackGroundTile(..)
+    , Character
+    , Condition(..)
+    , Direction(..)
+    , Grid
+    , Model
+    , Progress(..)
+    , ShadowTile(..)
+    , Size(..)
+    , Tile(..)
+    , WallJunction(..)
+    , WallTile
+    , checkBgImg
+    , checkWallImg
+    , displayGrid
+    , displayTile
+    , displayTileAtCoordinates
+    , displayTileAtIndex
+    , eefe
+    , eeff
+    , efee
+    , efef
+    , effe
+    , efff
+    , feee
+    , feef
+    , fefe
+    , ffee
+    , ffef
+    , fffe
+    , ffff
+    , getListIdx
+    , getTileIdxFromPosition
+    , gridSize
+    , gridWidth
+    , mainGrid
+    , tileSize
+    )
+
+--import Element exposing (..)
 
 import Collage exposing (..)
-import Element exposing (..)
 import List exposing (concat, drop, head, indexedMap, map)
 
 
@@ -448,7 +488,9 @@ checkBgImg bgtype =
             checkWallImg tile
 
 
-displayTile : Tile -> Element
+displayTile :
+    Tile
+    -> Collage msg --Element
 displayTile tile =
     let
         src =
@@ -459,10 +501,12 @@ displayTile tile =
                 _ ->
                     ""
     in
-    image tileSize tileSize src
+    image ( tileSize, tileSize ) src
 
 
-displayTileAtCoordinates : ( Tile, Int, Int ) -> Form
+displayTileAtCoordinates :
+    ( Tile, Int, Int )
+    -> Collage msg --Form
 displayTileAtCoordinates ( t, i, j ) =
     let
         position =
@@ -470,17 +514,23 @@ displayTileAtCoordinates ( t, i, j ) =
             , -1 * toFloat tileSize * (toFloat j - (toFloat gridSize - 1) / 2)
             )
     in
-    move position <| toForm <| displayTile t
+    --move position <| toForm <| displayTile t
+    displayTile t
+        |> shift position
 
 
-displayTileAtIndex : Int -> Tile -> Form
+displayTileAtIndex :
+    Int
+    -> Tile
+    -> Collage msg -- Form
 displayTileAtIndex index tile =
     let
         y =
             index // gridSize
 
         x =
-            index % gridSize
+            --index % gridSize
+            Basics.remainderBy gridSize index
     in
     displayTileAtCoordinates ( tile, x, y )
 
@@ -511,7 +561,7 @@ displayGrid :
     ( Int, Int )
     -> ( Float, Float )
     -> Grid
-    -> List Form -- display a grid
+    -> List (Collage msg) -- Form -- display a grid
 displayGrid frame pcCoords g =
     let
         tiles =
