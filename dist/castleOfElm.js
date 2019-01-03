@@ -7019,11 +7019,16 @@ var author$project$Main$view = function (model) {
 	var tHSide = tH * tileSide;
 	var tWSide = tW * tileSide;
 	var theelement = timjs$elm_collage$Collage$group(
-		A3(
-			author$project$GameModel$displayGrid,
-			_Utils_Tuple2(tW, tH),
-			pcPos,
-			author$project$GameModel$mainGrid));
+		_Utils_ap(
+			_List_fromArray(
+				[
+					A2(timjs$elm_collage$Collage$shift, pcPos, pcImage)
+				]),
+			A3(
+				author$project$GameModel$displayGrid,
+				_Utils_Tuple2(tW, tH),
+				pcPos,
+				author$project$GameModel$mainGrid)));
 	return timjs$elm_collage$Collage$Render$svg(theelement);
 };
 var elm$browser$Browser$element = _Browser_element;

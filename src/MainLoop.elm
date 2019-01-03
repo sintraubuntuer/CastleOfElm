@@ -190,20 +190,28 @@ view model =
             ( model.pc.x * tileSide, tileSide * model.pc.y )
 
         {- }
+              theelement =
+                  collage tWSide
+                      tHSide
+                      (displayGrid ( tW, tH ) pcPos mainGrid
+                          ++ [ pcImage
+                                  |> toForm
+                                  |> Debug.log "pc"
+                                  |> move pcPos
+                             ]
+                      )
+
            theelement =
-               collage tWSide
-                   tHSide
+               group <|
                    (displayGrid ( tW, tH ) pcPos mainGrid
-                       ++ [ pcImage
-                               |> toForm
-                               |> Debug.log "pc"
-                               |> move pcPos
-                          ]
+                       ++ [ pcImage |> shift pcPos ]
                    )
         -}
         theelement =
             group <|
-                displayGrid ( tW, tH ) pcPos mainGrid
+                ([ pcImage |> shift pcPos ]
+                    ++ displayGrid ( tW, tH ) pcPos mainGrid
+                )
     in
     theelement
         |> svg
