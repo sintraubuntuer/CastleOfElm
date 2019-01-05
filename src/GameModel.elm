@@ -197,14 +197,14 @@ fffe =
 
 mainGrid : Grid
 mainGrid =
-    [ BackGround (WallOver ffee)
+    [ --first line
+      BackGround (WallOver ffee)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
-    , --first line
-      BackGround (WallOver efef)
+    , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
@@ -213,11 +213,11 @@ mainGrid =
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver effe)
-    , BackGround (WallOver fefe)
-    , BackGround Wall
-    , BackGround Wall
     , -- second line
-      BackGround Wall
+      BackGround (WallOver fefe)
+    , BackGround Wall
+    , BackGround Wall
+    , BackGround Wall
     , BackGround Wall
     , BackGround Wall
     , BackGround Wall
@@ -229,7 +229,8 @@ mainGrid =
     , BackGround Wall
     , BackGround Wall
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- third line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround Floor
@@ -244,7 +245,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- fourth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround Floor
@@ -259,7 +261,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- fifth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround Floor
@@ -274,7 +277,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver feee)
+    , -- sixth line
+      BackGround (WallOver feee)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efee)
@@ -289,7 +293,8 @@ mainGrid =
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver eefe)
-    , BackGround (WallOver fefe)
+    , -- seventh line
+      BackGround (WallOver fefe)
     , BackGround Wall
     , BackGround Wall
     , BackGround (WallOver fefe)
@@ -304,7 +309,8 @@ mainGrid =
     , BackGround Wall
     , BackGround Wall
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- eighth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
@@ -319,7 +325,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- nineth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
@@ -334,7 +341,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- tenth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver feef)
@@ -349,7 +357,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- eleventh line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround Wall
@@ -364,7 +373,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver fefe)
+    , -- twelfth line
+      BackGround (WallOver fefe)
     , BackGround Floor
     , BackGround Floor
     , BackGround Floor
@@ -379,7 +389,8 @@ mainGrid =
     , BackGround Floor
     , BackGround Floor
     , BackGround (WallOver fefe)
-    , BackGround (WallOver feef)
+    , -- thirteenth line
+      BackGround (WallOver feef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
@@ -394,13 +405,7 @@ mainGrid =
     , BackGround (WallOver efef)
     , BackGround (WallOver efef)
     , BackGround (WallOver eeff)
-    , BackGround Wall
-    , BackGround Wall
-    , BackGround Wall
-    , BackGround Wall
-    , BackGround Wall
-    , BackGround Wall
-    , --last line
+    , -- fourteenth line
       BackGround Wall
     , BackGround Wall
     , BackGround Wall
@@ -410,14 +415,20 @@ mainGrid =
     , BackGround Wall
     , BackGround Wall
     , BackGround Wall
-    , BackGround Water
-    , BackGround Water
-    , BackGround Water
-    , BackGround Water
-    , BackGround Water
-    , BackGround Water
+    , BackGround Wall
+    , BackGround Wall
+    , BackGround Wall
+    , BackGround Wall
+    , BackGround Wall
+    , BackGround Wall
     , --last line
       BackGround Water
+    , BackGround Water
+    , BackGround Water
+    , BackGround Water
+    , BackGround Water
+    , BackGround Water
+    , BackGround Water
     , BackGround Water
     , BackGround Water
     , BackGround Water
@@ -448,6 +459,7 @@ getListIdx idx list =
 -----------------------------------------------------}
 
 
+checkWallImg : WallTile -> String
 checkWallImg walltype =
     let
         getsrc side =
@@ -473,6 +485,7 @@ checkWallImg walltype =
     "img/walls/" ++ r ++ "-" ++ u ++ "-" ++ l ++ "-" ++ d ++ ".png"
 
 
+checkBgImg : BackGroundTile -> String
 checkBgImg bgtype =
     case bgtype of
         Floor ->

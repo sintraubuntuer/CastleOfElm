@@ -1,8 +1,10 @@
-module Main exposing (Msg(..), fromCode, init, initialModel, main, matchToSide, movepc, pcState, subscriptions, update, view)
+module Main exposing (main)
 
+--(Msg(..), fromCode, init, initialModel, main, matchToSide, movepc, pcState, subscriptions, update, view)
 --import Signal exposing (Signal, foldp, map, map2, merge)
 --import Graphics.Element exposing (Element, image)
 --import Element exposing (Element, image)
+--import Debug exposing (log)
 
 import Browser
 import Browser.Events
@@ -11,7 +13,6 @@ import Browser.Events
         )
 import Collage exposing (..)
 import Collage.Render exposing (svg)
-import Debug exposing (log)
 import GameModel exposing (..)
 import Html exposing (Html)
 import Html.Events exposing (keyCode)
@@ -76,16 +77,21 @@ movepc dir model =
         checkPc default pc =
             let
                 x =
-                    pc.x |> Debug.log "pc x"
+                    pc.x
 
+                --|> Debug.log "pc x"
                 y =
-                    pc.y |> Debug.log "pc y"
+                    pc.y
 
+                --|> Debug.log "pc y"
                 idx =
-                    getTileIdxFromPosition ( pc.x, pc.y ) |> Debug.log "idx"
+                    getTileIdxFromPosition ( pc.x, pc.y )
 
+                --|> Debug.log "idx"
                 tile =
-                    getListIdx idx model.grid |> Debug.log "tile"
+                    getListIdx idx model.grid
+
+                --|> Debug.log "tile"
             in
             case tile of
                 Nothing ->
@@ -141,7 +147,8 @@ matchToSide frame side =
         tH =
             h // side
     in
-    ( log "tW" tW, log "tH" tH )
+    --( log "tW" tW, log "tH" tH )
+    ( tW, tH )
 
 
 view : Model -> Html Msg
@@ -178,7 +185,8 @@ view model =
             image ( tileSide, tileSide ) src
 
         ( tW, tH ) =
-            matchToSide (log "win" frame) tileSide
+            --matchToSide (log "win" frame) tileSide
+            matchToSide frame tileSide
 
         tWSide =
             tW * tileSide
