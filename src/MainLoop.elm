@@ -161,16 +161,13 @@ view model =
                     "none"
 
         ( tW, tH ) =
-            --matchToSide (log "win" frame) tileSide
             matchToSide frame tileSide
 
         tWSide =
-            --tW * tileSide
             getAdjustedSize frame ( gridSize, gridSize )
                 |> Tuple.first
 
         tHSide =
-            --tH * tileSide
             getAdjustedSize frame ( gridSize, gridSize )
                 |> Tuple.second
 
@@ -199,7 +196,6 @@ view model =
         pcPos =
             ( pos_x, pos_y )
     in
-    --theelement =
     Collage.group
         ([ pcImage |> shift pcPos ]
             ++ displayGrid ( tWSide, tHSide ) pcPos mainGrid
@@ -214,8 +210,7 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ --Keyboard.downs (\kcode -> KeyPress (fromCode kcode))
-          onKeyDown (Decode.map (\kCode -> KeyPress (fromCode kCode)) keyCode)
+        [ onKeyDown (Decode.map (\kCode -> KeyPress (fromCode kCode)) keyCode)
         ]
 
 

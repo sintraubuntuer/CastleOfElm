@@ -524,12 +524,7 @@ displayTileAtCoordinates ( t, x, y ) =
 
         position =
             ( pos_x, pos_y )
-
-        --( toFloat tileSize * (toFloat x - (gridSize // 2 |> toFloat))
-        --, -1 * toFloat tileSize * (toFloat y - (gridSize // 2 |> toFloat))
-        --  )
     in
-    --move position <| toForm <| displayTile t
     displayTile t
         |> shift position
 
@@ -541,7 +536,6 @@ displayTileAtIndex index tile =
             index // gridSize
 
         x =
-            --index % gridSize
             Basics.remainderBy gridSize index
     in
     displayTileAtCoordinates ( tile, x, y )

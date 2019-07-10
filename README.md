@@ -1,4 +1,4 @@
 # Castle Of Elm
-Roguelike for 7DRL make in [Elm](http://www.elm-lang.org) from scratch in 3 days.
+This an upgrade to Elm 0.19 of the CastleOfElm game by Claudia Doppioslash ( https://github.com/doppioslash/CastleOfElm )
 
-Play at [castleofelm.com](http://www.castleofelm.com)
+It is a very simple game but might be the starting point for a more elaborate game
