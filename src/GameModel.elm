@@ -39,8 +39,6 @@ module GameModel exposing
     , tileSize
     )
 
---import Element exposing (..)
-
 import Collage exposing (..)
 import List exposing (concat, drop, head, indexedMap, map)
 
@@ -66,7 +64,7 @@ type alias Character =
 
 
 type BackGroundTile
-    = Floor --random floor tile
+    = Floor
     | WallOver WallTile
     | Wall
     | Water
@@ -117,10 +115,6 @@ type Progress
 
 type alias Grid =
     List Tile
-
-
-
---more than 1 layer
 
 
 type alias Model =
@@ -501,9 +495,7 @@ checkBgImg bgtype =
             checkWallImg tile
 
 
-displayTile :
-    Tile
-    -> Collage msg --Element
+displayTile : Tile -> Collage msg
 displayTile tile =
     let
         src =
@@ -517,25 +509,32 @@ displayTile tile =
     image ( tileSize, tileSize ) src
 
 
-displayTileAtCoordinates :
-    ( Tile, Int, Int )
-    -> Collage msg --Form
-displayTileAtCoordinates ( t, i, j ) =
+displayTileAtCoordinates : ( Tile, Int, Int ) -> Collage msg
+displayTileAtCoordinates ( t, x, y ) =
     let
+        pos_x =
+            (x - (gridSize // 2))
+                |> (\arg -> arg * tileSize)
+                |> toFloat
+
+        pos_y =
+            (y - (gridSize // 2))
+                |> (\arg -> -1 * arg * tileSize)
+                |> toFloat
+
         position =
-            ( toFloat tileSize * (toFloat i - (toFloat gridSize - 1) / 2)
-            , -1 * toFloat tileSize * (toFloat j - (toFloat gridSize - 1) / 2)
-            )
+            ( pos_x, pos_y )
+
+        --( toFloat tileSize * (toFloat x - (gridSize // 2 |> toFloat))
+        --, -1 * toFloat tileSize * (toFloat y - (gridSize // 2 |> toFloat))
+        --  )
     in
     --move position <| toForm <| displayTile t
     displayTile t
         |> shift position
 
 
-displayTileAtIndex :
-    Int
-    -> Tile
-    -> Collage msg -- Form
+displayTileAtIndex : Int -> Tile -> Collage msg
 displayTileAtIndex index tile =
     let
         y =
@@ -562,26 +561,22 @@ getTileIdxFromPosition : ( Float, Float ) -> Int
 getTileIdxFromPosition ( x, y ) =
     let
         x_tile =
-            round x + 7
+            round x
 
         y_tile =
-            8 - round y
+            round y
     in
-    (y_tile - 1) * gridSize + x_tile
+    y_tile * gridSize + x_tile
 
 
-displayGrid :
-    ( Int, Int )
-    -> ( Float, Float )
-    -> Grid
-    -> List (Collage msg) -- Form -- display a grid
-displayGrid frame pcCoords g =
+
+-- display a grid
+
+
+displayGrid : ( Float, Float ) -> ( Float, Float ) -> Grid -> List (Collage msg)
+displayGrid adjustedSize pcCoords g =
     let
         tiles =
             indexedMap displayTileAtIndex g
     in
     tiles
-
-
-
--- collisions : all except floor

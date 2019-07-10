@@ -4717,7 +4717,7 @@ var author$project$GameModel$mainGrid = _List_fromArray(
 		author$project$GameModel$BackGround(author$project$GameModel$Water)
 	]);
 var author$project$GameModel$Right = 1;
-var author$project$Main$pcState = {aI: 1, a9: 0, ba: 0};
+var author$project$Main$pcState = {aI: 1, a9: 7, ba: 7};
 var author$project$Main$initialModel = {aM: author$project$GameModel$mainGrid, aN: author$project$GameModel$gridWidth, aZ: author$project$Main$pcState};
 var elm$core$Basics$False = 1;
 var elm$core$Basics$True = 0;
@@ -5911,9 +5911,9 @@ var elm$core$Basics$round = _Basics_round;
 var author$project$GameModel$getTileIdxFromPosition = function (_n0) {
 	var x = _n0.a;
 	var y = _n0.b;
-	var y_tile = 8 - elm$core$Basics$round(y);
-	var x_tile = elm$core$Basics$round(x) + 7;
-	return ((y_tile - 1) * author$project$GameModel$gridSize) + x_tile;
+	var y_tile = elm$core$Basics$round(y);
+	var x_tile = elm$core$Basics$round(x);
+	return (y_tile * author$project$GameModel$gridSize) + x_tile;
 };
 var author$project$Main$movepc = F2(
 	function (dir, model) {
@@ -5923,11 +5923,11 @@ var author$project$Main$movepc = F2(
 					case 2:
 						return _Utils_update(
 							pc,
-							{aI: 2, ba: pc.ba + 1});
+							{aI: 2, ba: pc.ba - 1});
 					case 3:
 						return _Utils_update(
 							pc,
-							{aI: 3, ba: pc.ba - 1});
+							{aI: 3, ba: pc.ba + 1});
 					case 0:
 						return _Utils_update(
 							pc,
@@ -6061,9 +6061,15 @@ var timjs$elm_collage$Collage$shift = F2(
 	});
 var author$project$GameModel$displayTileAtCoordinates = function (_n0) {
 	var t = _n0.a;
-	var i = _n0.b;
-	var j = _n0.c;
-	var position = _Utils_Tuple2(author$project$GameModel$tileSize * (i - ((author$project$GameModel$gridSize - 1) / 2)), ((-1) * author$project$GameModel$tileSize) * (j - ((author$project$GameModel$gridSize - 1) / 2)));
+	var x = _n0.b;
+	var y = _n0.c;
+	var pos_y = function (arg) {
+		return ((-1) * arg) * author$project$GameModel$tileSize;
+	}(y - ((author$project$GameModel$gridSize / 2) | 0));
+	var pos_x = function (arg) {
+		return arg * author$project$GameModel$tileSize;
+	}(x - ((author$project$GameModel$gridSize / 2) | 0));
+	var position = _Utils_Tuple2(pos_x, pos_y);
 	return A2(
 		timjs$elm_collage$Collage$shift,
 		position,
@@ -6077,9 +6083,19 @@ var author$project$GameModel$displayTileAtIndex = F2(
 			_Utils_Tuple3(tile, x, y));
 	});
 var author$project$GameModel$displayGrid = F3(
-	function (frame, pcCoords, g) {
+	function (adjustedSize, pcCoords, g) {
 		var tiles = A2(elm$core$List$indexedMap, author$project$GameModel$displayTileAtIndex, g);
 		return tiles;
+	});
+var author$project$Main$getAdjustedSize = F2(
+	function (frame, gSize) {
+		var _n0 = frame;
+		var w = _n0.a;
+		var h = _n0.b;
+		var _n1 = gSize;
+		var gW = _n1.a;
+		var gH = _n1.b;
+		return _Utils_Tuple2(w / gW, h / gH);
 	});
 var author$project$Main$matchToSide = F2(
 	function (frame, side) {
@@ -6090,10 +6106,41 @@ var author$project$Main$matchToSide = F2(
 		var tW = (w / side) | 0;
 		return _Utils_Tuple2(tW, tH);
 	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
 var timjs$elm_collage$Collage$Core$Group = function (a) {
 	return {$: 5, a: a};
 };
 var timjs$elm_collage$Collage$group = A2(elm$core$Basics$composeL, timjs$elm_collage$Collage$Core$collage, timjs$elm_collage$Collage$Core$Group);
+var timjs$elm_collage$Collage$scaleXY = F2(
+	function (_n0, collage) {
+		var sx = _n0.a;
+		var sy = _n0.b;
+		var _n1 = collage.ax;
+		var sx0 = _n1.a;
+		var sy0 = _n1.b;
+		return _Utils_update(
+			collage,
+			{
+				ax: _Utils_Tuple2(sx0 * sx, sy0 * sy)
+			});
+	});
+var timjs$elm_collage$Collage$scaleX = F2(
+	function (s, collage) {
+		return A2(
+			timjs$elm_collage$Collage$scaleXY,
+			_Utils_Tuple2(s, 1),
+			collage);
+	});
+var timjs$elm_collage$Collage$scaleY = F2(
+	function (s, collage) {
+		return A2(
+			timjs$elm_collage$Collage$scaleXY,
+			_Utils_Tuple2(1, s),
+			collage);
+	});
 var timjs$elm_collage$Collage$opposite = function (_n0) {
 	var x = _n0.a;
 	var y = _n0.b;
@@ -6512,10 +6559,6 @@ var timjs$elm_collage$Collage$Render$decodeJoin = function (join) {
 	}
 };
 var elm$core$Basics$pi = _Basics_pi;
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
 var timjs$elm_collage$Collage$Render$decodeTransform = function (collage) {
 	var sy = elm$core$String$fromFloat(collage.ax.b);
 	var sx = elm$core$String$fromFloat(collage.ax.a);
@@ -6973,8 +7016,24 @@ var timjs$elm_collage$Collage$Render$svg = function (collage) {
 };
 var author$project$Main$view = function (model) {
 	var tileSide = 64;
-	var pcPos = _Utils_Tuple2(model.aZ.a9 * tileSide, tileSide * model.aZ.ba);
-	var frame = _Utils_Tuple2(600, 600);
+	var frame = _Utils_Tuple2(960, 960);
+	var tHSide = A2(
+		author$project$Main$getAdjustedSize,
+		frame,
+		_Utils_Tuple2(author$project$GameModel$gridSize, author$project$GameModel$gridSize)).b;
+	var pos_y = function (arg) {
+		return (tHSide * arg) * (-1);
+	}(model.aZ.ba - ((author$project$GameModel$gridSize / 2) | 0));
+	var yScaleFactor = tHSide / tileSide;
+	var tWSide = A2(
+		author$project$Main$getAdjustedSize,
+		frame,
+		_Utils_Tuple2(author$project$GameModel$gridSize, author$project$GameModel$gridSize)).a;
+	var pos_x = function (arg) {
+		return tWSide * arg;
+	}(model.aZ.a9 - ((author$project$GameModel$gridSize / 2) | 0));
+	var pcPos = _Utils_Tuple2(pos_x, pos_y);
+	var xScaleFactor = tWSide / tileSide;
 	var dir = function () {
 		var _n1 = model.aZ.aI;
 		switch (_n1) {
@@ -6992,26 +7051,30 @@ var author$project$Main$view = function (model) {
 	}();
 	var src = 'img/pc/' + (dir + '.png');
 	var pcImage = A2(
-		timjs$elm_collage$Collage$image,
-		_Utils_Tuple2(tileSide, tileSide),
-		src);
+		timjs$elm_collage$Collage$scaleY,
+		yScaleFactor,
+		A2(
+			timjs$elm_collage$Collage$scaleX,
+			xScaleFactor,
+			A2(
+				timjs$elm_collage$Collage$image,
+				_Utils_Tuple2(tileSide, tileSide),
+				src)));
 	var _n0 = A2(author$project$Main$matchToSide, frame, tileSide);
 	var tW = _n0.a;
 	var tH = _n0.b;
-	var tHSide = tH * tileSide;
-	var tWSide = tW * tileSide;
-	var theelement = timjs$elm_collage$Collage$group(
-		_Utils_ap(
-			_List_fromArray(
-				[
-					A2(timjs$elm_collage$Collage$shift, pcPos, pcImage)
-				]),
-			A3(
-				author$project$GameModel$displayGrid,
-				_Utils_Tuple2(tW, tH),
-				pcPos,
-				author$project$GameModel$mainGrid)));
-	return timjs$elm_collage$Collage$Render$svg(theelement);
+	return timjs$elm_collage$Collage$Render$svg(
+		timjs$elm_collage$Collage$group(
+			_Utils_ap(
+				_List_fromArray(
+					[
+						A2(timjs$elm_collage$Collage$shift, pcPos, pcImage)
+					]),
+				A3(
+					author$project$GameModel$displayGrid,
+					_Utils_Tuple2(tWSide, tHSide),
+					pcPos,
+					author$project$GameModel$mainGrid))));
 };
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
